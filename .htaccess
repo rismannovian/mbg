@@ -1,0 +1,31 @@
+RewriteEngine On
+
+###############################################
+# 1. IZINKAN FILE STATIS (PDF, image, css, js, excel)
+###############################################
+RewriteCond %{REQUEST_URI} \.(xlsx|xls|pdf|jpg|jpeg|png|gif|css|js)$ [NC]
+RewriteRule ^ - [L]
+
+###############################################
+# 2. IZINKAN FOLDER PDF.JS (WAJIB UNTUK VIEWER)
+###############################################
+RewriteCond %{REQUEST_URI} ^/public/pdfjs/ [NC]
+RewriteRule ^ - [L]
+
+###############################################
+# 3. IZINKAN FILE PDF SKL LANGSUNG DIAKSES
+###############################################
+RewriteCond %{REQUEST_URI} ^/assets/skl/ [NC]
+RewriteRule ^ - [L]
+
+###############################################
+# 4. JIKA FILE / FOLDER ADA, JANGAN ROUTING
+###############################################
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+###############################################
+# 5. ROUTING MVC
+###############################################
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
