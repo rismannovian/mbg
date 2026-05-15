@@ -25,10 +25,18 @@ require_once 'app/views/layouts/header.php';
         <?php
             $sisa = $mbg['jml_mbg'] - $rekap['total_ambil'];
 
-            $belum_kembali = $rekap['total_ambil'] - $rekap['total_kembali'];
+                    $belum_kembali = 0;
 
-            if ($belum_kembali < 0) {
-                $belum_kembali = 0;
+            // hanya hitung jika sudah approve / pengambilan
+            if (
+                $rekap['total_ambil'] > 0 &&
+                $rekap['total_kembali'] >= 0
+            ) {
+                $belum_kembali = $rekap['total_ambil'] - $rekap['total_kembali'];
+
+                if ($belum_kembali < 0) {
+                    $belum_kembali = 0;
+                }
             }
         ?>
             <div class="row mb-4 g-2">

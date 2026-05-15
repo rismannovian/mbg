@@ -147,11 +147,17 @@ public function getRekap($mbg_id)
         SELECT
             COUNT(*) AS jml_siswa,
 
-            COALESCE(SUM(jml_pesan),0) AS total_ambil,
+            COALESCE(SUM(
+                CASE
+                    WHEN status IN ('disetujui','kembalikan','diproses','selesai')
+                    THEN jml_pesan
+                    ELSE 0
+                END
+            ),0) AS total_ambil,
 
             COALESCE(SUM(
                 CASE 
-                    WHEN status IN ('kembalikan','selesai')
+                    WHEN status IN ('selesai')
                     THEN jml_kembali
                     ELSE 0
                 END
