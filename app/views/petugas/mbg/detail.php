@@ -22,11 +22,15 @@ require_once 'app/views/layouts/header.php';
         <!-- BODY -->
         <div class="card-body">
 
-           <?php
+        <?php
             $sisa = $mbg['jml_mbg'] - $rekap['total_ambil'];
-            $belum_kembali = $rekap['total_ambil'] - $rekap['total_kembali'];
-            ?>
 
+            $belum_kembali = $rekap['total_ambil'] - $rekap['total_kembali'];
+
+            if ($belum_kembali < 0) {
+                $belum_kembali = 0;
+            }
+        ?>
             <div class="row mb-4 g-2">
 
                 <div class="col">
@@ -65,23 +69,24 @@ require_once 'app/views/layouts/header.php';
                     </div>
                 </div>
 
-               <div class="col">
-    <div class="card border-0 shadow-sm text-center bg-dark text-white">
-        <div class="card-body py-2 px-2">
-            <small class="d-block">Belum Kembali</small>
-            <h5 class="mb-0">
-                <?php 
-                    // Menampilkan 0 jika statusnya belum Disetujui
-                    if ($mbg['status'] == 'pesan' || $mbg['status'] == 'disetujui') {
-                        echo "0"; // Tampilkan 0 jika status masih 'pesan' atau 'disetujui'
-                    } else {
-                        echo number_format($rekap['belum_kembali']);
-                    }
-                ?>
-            </h5>
-        </div>
-    </div>
-</div>
+             <div class="col">
+                <div class="card border-0 shadow-sm text-center bg-dark text-white">
+                    <div class="card-body py-2 px-2">
+                        <small class="d-block">Belum Kembali</small>
+
+                        <h5 class="mb-0">
+                            <?php
+                            if ($mbg['status'] == 'pesan') {
+                                echo "0";
+                            } else {
+                                echo number_format($belum_kembali);
+                            }
+                            ?>
+                        </h5>
+
+                    </div>
+                </div>
+            </div>
 
             </div>
 

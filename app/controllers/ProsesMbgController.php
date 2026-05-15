@@ -103,7 +103,7 @@ if ($model->cekPesananKelas($mbg['id'], $kelas_id)) {
     $petugas = $petugasModel->getByUserId($user_id);
 
     // 🔥 kirim ke model
-    $model->updateApprove($id, $data['jml_pesan'], $petugas['id']);
+    $model->updateApprove($id, $petugas['id']);
 
     $_SESSION['success'] = "Pesanan disetujui.";
     header('Location: index.php?url=prosesmbg/index');
@@ -190,13 +190,7 @@ public function kirim_kembali($id)
 
     $model = $this->model('ProsesMbgModel');
 
-    // ambil data dulu
-    $data = $model->getById($id);
-
-    // otomatis: jml_kembali = jml_pesan
-    $jumlah = $data['jml_pesan'];
-
-    $model->updateKembali($id, $jumlah);
+    $model->updateKembali($id);
 
     $_SESSION['success'] = "Pengembalian berhasil dikirim.";
     header('Location: index.php?url=siswa/mbg');

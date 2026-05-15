@@ -184,19 +184,18 @@ class ProsesMbgModel
     }
 
     // ================= INPUT REALISASI (SISWA) =================
-public function updateKembali($id, $jumlah)
-{
-    $stmt = $this->pdo->prepare("
-        UPDATE proses_mbg_siswa
-        SET 
-            jml_kembali = ?,
-            status = 'kembalikan',
-            updated_at = NOW()
-        WHERE id = ?
-    ");
+        public function updateKembali($id)
+        {
+            $stmt = $this->pdo->prepare("
+                UPDATE proses_mbg_siswa
+                SET 
+                    status = 'kembalikan',
+                    updated_at = NOW()
+                WHERE id = ?
+            ");
 
-    return $stmt->execute([$jumlah, $id]);
-}
+            return $stmt->execute([$id]);
+        }
 
     // ================= APPROVE AKHIR (PETUGAS) =================
     public function setSelesai($id)
@@ -212,20 +211,23 @@ public function updateKembali($id, $jumlah)
         return $stmt->execute([$id]);
     }
 
-public function updateApprove($id, $jumlah, $petugas_id)
-{
-    $stmt = $this->pdo->prepare("
-        UPDATE proses_mbg_siswa
-        SET 
-            status = 'disetujui',
-            jml_kembali = ?,
-            petugas_pengambilan_id = ?,
-            updated_at = NOW()
-        WHERE id = ?
-    ");
+    public function updateApprove($id, $petugas_id)
+    {
+        $stmt = $this->pdo->prepare("
+            UPDATE proses_mbg_siswa
+            SET 
+                status = 'disetujui',
+                jml_kembali = 0,
+                petugas_pengambilan_id = ?,
+                updated_at = NOW()
+            WHERE id = ?
+        ");
 
-    return $stmt->execute([$jumlah, $petugas_id, $id]);
-}
+        return $stmt->execute([
+            $petugas_id,
+            $id
+        ]);
+    }
 
 public function cekPesananKelas($mbg_id, $kelas_id)
 {
@@ -264,7 +266,8 @@ public function setDiproses($id, $petugas_id)
     $stmt = $this->pdo->prepare("
         UPDATE proses_mbg_siswa
         SET 
-            status = 'diproses',
+            status = 'selesai',
+            jml_kembali = jml_pesan,
             petugas_pengembalian_id = ?,
             updated_at = NOW()
         WHERE id = ?
